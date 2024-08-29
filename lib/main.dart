@@ -31,17 +31,12 @@ class _MyAppState extends State<MyApp> {
         actions: [
           IconButton(onPressed: (){}, icon: Icon(Icons.add_box_outlined,))],
       ),
-      body: 
-      //[Text('홈페이지'),Text('샵페이지')][tap],
-      ListView.builder(itemBuilder: (c, i) {
-        return ListView(children: [
-          Image.asset(''),
-          Text('좋아요 100'),
-          Text('글쓴이'),
-          Text('글내용'),
-        ],);
+      body:ListView.builder(
+        itemCount: 3,
+        itemBuilder: (c,i){
+          return Pead();
       },)
-        ,
+      ,
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -56,5 +51,18 @@ class _MyAppState extends State<MyApp> {
       ],)
     );
 
+  }
+}
+class Pead extends StatelessWidget {
+  const Pead ({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Image.asset('assets/images.jpeg'),
+      Text('좋아요 100'),
+      Text('글쓴이'),
+      Text('글내용'),
+]);
   }
 }
