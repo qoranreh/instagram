@@ -19,8 +19,10 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
+//변수 넣는 곳
 var tap =0;
-
+var images = ['assets/images.jpeg','assets/images (1).jpeg','assets/Instagram1.jpeg'];
+var imagesNum=0;
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
@@ -31,11 +33,7 @@ class _MyAppState extends State<MyApp> {
         actions: [
           IconButton(onPressed: (){}, icon: Icon(Icons.add_box_outlined,))],
       ),
-      body:ListView.builder(
-        itemCount: 3,
-        itemBuilder: (c,i){
-          return Pead();
-      },)
+      body: [homeMain(),Text('샵페이지')][tap]
       ,
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
@@ -53,16 +51,39 @@ class _MyAppState extends State<MyApp> {
 
   }
 }
-class Pead extends StatelessWidget {
-  const Pead ({super.key});
+class homeMain extends StatelessWidget {
+  const homeMain({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Image.asset('assets/images.jpeg'),
-      Text('좋아요 100'),
-      Text('글쓴이'),
-      Text('글내용'),
-]);
+    return ListView.builder(
+      itemCount: 3,
+      itemBuilder: (c,i){
+        imagesNum=i;
+        return Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Container(
+            child: Column(
+                children: [
+                  Container(
+                      child:
+                      Image.asset(images[imagesNum])
+                  )
+                  ,
+                  Container(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('좋아요 100'),
+                        Text('글쓴이'),
+                        Text('글내용')],
+                    ),
+                  )
+                ]),
+          ),
+        );
+      },);
   }
 }
+
