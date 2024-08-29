@@ -12,7 +12,7 @@ var theme= ThemeData(
     ),
     appBarTheme: AppBarTheme(
         color: Colors.white,
-        elevation: 1,
+        elevation: 0.1,
         titleTextStyle: TextStyle(fontSize: 25)
 
     ),
