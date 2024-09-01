@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(
@@ -73,14 +74,28 @@ class _MyAppState extends State<MyApp> {
 
   }
 }
-class homeMain extends StatelessWidget {
+class homeMain extends StatefulWidget {
    homeMain({super.key,this.data,this.images});
   final data;
   final images;
+
+  @override
+  State<homeMain> createState() => _homeMainState();
+}
+class _homeMainState extends State<homeMain> {
+  var scroll= ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    scroll.addListener((){
+        print(scroll.position.pixels);
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemCount: 3, itemBuilder: (c,i){
-        if(data.isNotEmpty){
+    return ListView.builder(itemCount: 3, controller:scroll,itemBuilder: (c,i){
+        if(widget.data.isNotEmpty){
           return Padding(
             padding: const EdgeInsets.all(15.0),
             child: Container(
@@ -88,7 +103,7 @@ class homeMain extends StatelessWidget {
                   children: [
                     Container(
                         child:
-                        Image.network(data[i]['image'])
+                        Image.network(widget.data[i]['image'])
                     )
                     ,
                     Container(
@@ -96,9 +111,9 @@ class homeMain extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(data[i]['likes'].toString()??''),
-                          Text(data[i]['user']??''),
-                          Text(data[i]['content']??'')
+                          Text('좋아요 ${widget.data[i]['likes'].toString()}'),
+                          Text(widget.data[i]['user']??''),
+                          Text(widget.data[i]['content']??'')
                         ],
                       ),
                     )
