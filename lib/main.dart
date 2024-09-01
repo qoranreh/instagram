@@ -106,6 +106,9 @@ class homeMain extends StatelessWidget {
             ),
           );
         }
+        else{
+          Text('로딩중');
+        }
       },);
   }
 }
