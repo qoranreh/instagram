@@ -27,23 +27,16 @@ class MyApp extends StatefulWidget {
 var tap =0;
 var images = ['assets/images.jpeg','assets/images (1).jpeg','assets/Instagram1.jpeg'];
 var imagesNum=0;
-var likes=[];
-var user =[];
-var content =[];
+var data=[];
 class _MyAppState extends State<MyApp> {
 
   getData()async{
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
     //링크 변수에 넣어쓰기
     var result2=jsonDecode(result.body);
-    print(result2[0]);
-    for(int i=0;i<3;i++)
-      {
-        likes.add(result2[i]['likes']);
-        content.add(result2[i]['content']);
-        user.add(result2[i]['user']);
-      }
-    print(likes);
+    setState(() {
+      data=result2;
+    });
   }
 
   @override
@@ -62,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         actions: [
           IconButton(onPressed: (){}, icon: Icon(Icons.add_box_outlined,))],
       ),
-      body: [homeMain(likes:likes, content: content,user:user),Text('샵페이지')][tap]
+      body: [homeMain(data:data,images:images),Text('샵페이지')][tap]
       ,
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
@@ -81,39 +74,38 @@ class _MyAppState extends State<MyApp> {
   }
 }
 class homeMain extends StatelessWidget {
-   homeMain({super.key,this.likes,this.content,this.user});
-  var likes;
-  var content;
-  var user;
+   homeMain({super.key,this.data,this.images});
+  final data;
+  final images;
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 3,
-      itemBuilder: (c,i){
-        imagesNum=i;
-        return Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Container(
-            child: Column(
-                children: [
-                  Container(
-                      child:
-                      Image.asset(images[imagesNum])
-                  )
-                  ,
-                  Container(
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(likes[i].toString()),
-                        Text(user[i]),
-                        Text(content[i])],
-                    ),
-                  )
-                ]),
-          ),
-        );
+    return ListView.builder(itemCount: 3, itemBuilder: (c,i){
+        if(data.isNotEmpty){
+          return Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              child: Column(
+                  children: [
+                    Container(
+                        child:
+                        Image.network(data[i]['image'])
+                    )
+                    ,
+                    Container(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(data[i]['likes'].toString()??''),
+                          Text(data[i]['user']??''),
+                          Text(data[i]['content']??'')
+                        ],
+                      ),
+                    )
+                  ]),
+            ),
+          );
+        }
       },);
   }
 }
