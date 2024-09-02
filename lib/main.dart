@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/style.dart' as style;
@@ -29,8 +30,10 @@ var tap =0;
 var images = ['assets/images.jpeg','assets/images (1).jpeg','assets/Instagram1.jpeg'];
 var imagesNum=0;
 var data=[];
-class _MyAppState extends State<MyApp> {
 
+
+class _MyAppState extends State<MyApp> {
+//함수넣는 곳
   getData()async{
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
     //링크 변수에 넣어쓰기
@@ -51,10 +54,20 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Text('Instagram'),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.add_box_outlined,))],
+          IconButton(
+              onPressed: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (c){
+                      return Upload();
+                    }
+                    )
+                );
+              },
+              icon: Icon(Icons.add_box_outlined,)
+          )
+        ],
       ),
       body: [homeMain(data:data,images:images),Text('샵페이지')][tap]
       ,
@@ -84,18 +97,27 @@ class homeMain extends StatefulWidget {
 }
 class _homeMainState extends State<homeMain> {
   var scroll= ScrollController();
+  var result3;
+  var result4;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     scroll.addListener((){
-        print(scroll.position.pixels);
+      if(scroll.position.pixels==scroll.position.maxScrollExtent) {
+        result3 = http.get(Uri.parse('https://codingapple1.github.io/app/more1.json'));
+          //링크 변수에 넣어쓰기
+        setState(() {
+          data.add(jsonDecode(result3));
+        });
+      }
     });
   }
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemCount: 3, controller:scroll,itemBuilder: (c,i){
+    return ListView.builder(itemCount: widget.data.length, controller:scroll,itemBuilder: (c,i){
         if(widget.data.isNotEmpty){
+          print(widget.data);
           return Padding(
             padding: const EdgeInsets.all(15.0),
             child: Container(
@@ -128,3 +150,19 @@ class _homeMainState extends State<homeMain> {
   }
 }
 
+class Upload extends StatelessWidget {
+  const Upload({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('이미지업로드화면')
+        ],
+      ),
+    );
+  }
+}
