@@ -36,7 +36,9 @@ var data=[];//왜 얘 MyApp class 안에 못넣음?
 
 
 class _MyAppState extends State<MyApp> {
-  var userImage;
+  var userImage;//이미지 저장
+  var userContent;
+
 //함수넣는 곳
   getData()async{
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
@@ -46,7 +48,25 @@ class _MyAppState extends State<MyApp> {
       data=result2;
     });
   }
-
+  setUserContent(a){
+    setState(() {
+      userContent=a;
+    });
+  }
+  addMyData(){
+    var myData = {//유저의 게시물 완성
+      'id': data.length,
+      'image': userImage,
+      'likes':5,
+      'date':'July 25',
+      'content': userContent,
+      'liked' : false,
+      'user':'John Kim'
+    };
+    setState(() {//datestate에 이 게시물 넣기 .
+      data.insert(0, myData);
+    });
+  }
   @override
   void initState(){
     // TODO: implement initState
@@ -72,9 +92,13 @@ class _MyAppState extends State<MyApp> {
                 }
     
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (c){
-                      return Upload();
-                    }
+                    MaterialPageRoute(builder: (c)=>
+                        Upload(
+                        userImage:userImage,
+                        setUserContent: setUserContent,
+                        addMyData:addMyData
+                        )
+                    
                     )
                 );
               },
@@ -136,9 +160,13 @@ class _homeMainState extends State<homeMain> {
             child: Container(
               child: Column(
                   children: [
+
                     Container(
                         child:
-                        Image.network(widget.data[i]['image'])
+                        widget.data[i]['image'].runtimeType==String
+                            ?Image.network(widget.data[i]['image'])
+                            : Image.file(widget.data[i]['image'])
+
                     )
                     ,
                     Container(
@@ -164,19 +192,37 @@ class _homeMainState extends State<homeMain> {
 }
 
 class Upload extends StatelessWidget {
-  const Upload({super.key});
-
+  Upload({super.key,this.userImage,this.setUserContent,this.addMyData});
+  var setUserContent;
+  var userImage;
+  var textInput =TextEditingController();
+  var data;
+  var addMyData;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(actions: [
+        IconButton(onPressed: (){
+          addMyData();
+          Navigator.pop(context);
+        }, icon: Icon(Icons.send))
+      ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('이미지업로드화면'),
+          Image.file(userImage),
+          TextField(onChanged: (text){ setUserContent=text;          },),
           IconButton(onPressed: (){
             Navigator.pop(context);
-          }, icon: Icon(Icons.close))
+          }, icon: Icon(Icons.close)),
+          IconButton(onPressed: (){
+            Navigator.pop(context);
+            //버튼 누를시 이미지데이터 추가, 좋아요 기본 0, context추가
+            data[3]['image'];
+          }, icon: Icon(Icons.navigate_next))
+
         ],
       ),
     );
