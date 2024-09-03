@@ -5,6 +5,8 @@ import 'package:instagram/style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() {
   runApp(
@@ -29,10 +31,12 @@ class MyApp extends StatefulWidget {
 var tap =0;
 var images = ['assets/images.jpeg','assets/images (1).jpeg','assets/Instagram1.jpeg'];
 var imagesNum=0;
-var data=[];
+var data=[];//왜 얘 MyApp class 안에 못넣음?
+
 
 
 class _MyAppState extends State<MyApp> {
+  var userImage;
 //함수넣는 곳
   getData()async{
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
@@ -57,7 +61,16 @@ class _MyAppState extends State<MyApp> {
         title: Text('Instagram'),
         actions: [
           IconButton(
-              onPressed: (){
+              onPressed: ()async{
+
+                var picker = ImagePicker();
+                var image = await picker.pickImage(source: ImageSource.gallery);
+                if(image != null){
+                  setState(() {
+                    userImage = File(image.path);
+                  });
+                }
+    
                 Navigator.push(context,
                     MaterialPageRoute(builder: (c){
                       return Upload();
@@ -160,7 +173,10 @@ class Upload extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('이미지업로드화면')
+          Text('이미지업로드화면'),
+          IconButton(onPressed: (){
+            Navigator.pop(context);
+          }, icon: Icon(Icons.close))
         ],
       ),
     );
