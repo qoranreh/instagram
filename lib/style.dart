@@ -6,6 +6,16 @@ var theme= ThemeData(
             backgroundColor: Colors.grey
         )
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.blue,
+        shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
+
+
+      )
+    ),
     iconTheme: IconThemeData(
         size: 30,
         color: Colors.black

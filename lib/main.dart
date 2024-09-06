@@ -7,14 +7,20 @@ import 'dart:convert';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-      MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: style.theme,
-         home: MyApp()
-  )
+      ChangeNotifierProvider(
+        create: (c)=> Store1(),
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: style.theme,
+           home: MyApp()
+          ),
+      )
   );
 }
 
@@ -40,6 +46,15 @@ class _MyAppState extends State<MyApp> {
   var userContent;
 
 //함수넣는 곳
+saveData() async{
+  var storage = await SharedPreferences.getInstance();//저장공간을 쓰기위해 오픈.
+  var map= {'age' : 20};
+  storage.setString('map', jsonEncode(map));
+  var result = storage.get('map');
+
+  print(result);
+
+}
   getData()async{
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
     //링크 변수에 넣어쓰기
@@ -72,6 +87,7 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     getData();
+    saveData();
   }
 
   @override
@@ -154,7 +170,7 @@ class _homeMainState extends State<homeMain> {
   Widget build(BuildContext context) {
     return ListView.builder(itemCount: widget.data.length, controller:scroll,itemBuilder: (c,i){
         if(widget.data.isNotEmpty){
-          print(widget.data);
+
           return Padding(
             padding: const EdgeInsets.all(15.0),
             child: Container(
@@ -174,6 +190,25 @@ class _homeMainState extends State<homeMain> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          GestureDetector(
+                              child: Text(widget.data[i]['user']),
+                              onTap: (){
+                                Navigator.push(context,
+                                PageRouteBuilder(
+                                    pageBuilder: (c,a1,a2)=>Profile(),
+                                    transitionsBuilder: (c, a1, a2, child) =>
+                                    SlideTransition(position: Tween(
+                                      begin: Offset(-1.0,0.0),
+                                      end: Offset(0.0,0.0),
+                                    ).animate(a1),
+                                      child: child,
+                                    )
+
+
+                                )
+                                );
+                              },
+                          ),
                           Text('좋아요 ${widget.data[i]['likes'].toString()}'),
                           Text(widget.data[i]['user']??''),
                           Text(widget.data[i]['content']??'')
@@ -226,5 +261,57 @@ class Upload extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class Profile extends StatelessWidget {
+  const Profile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(context.watch<Store1>().name),),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+            CircleAvatar(radius: 30,backgroundColor: Colors.grey,),
+            Text('팔로워 ${context.read<Store1>().follow}명'),
+            ElevatedButton(onPressed: (){
+              context.read<Store1>().addfollow();
+            },
+                child: Text('팔로우')
+            )
+          ],
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+
+class Store1 extends ChangeNotifier {
+
+  var name = 'john kim';
+  var follow = 0;
+  addfollow(){
+    if(
+    //버튼을 누르지 않음
+    ){
+      follow++;
+      //정보 저장.
+    }
+    else//버튼을 이미 눌름 .
+      {
+        follow--;
+        //정보 저장 해제
+      }
+
+  }
+  changeName(){
+    name ='john park';
+    notifyListeners();
   }
 }
