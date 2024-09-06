@@ -13,8 +13,11 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-      ChangeNotifierProvider(
-        create: (c)=> Store1(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (c)=> Store1()),
+          ChangeNotifierProvider(create: (c)=> Store2())
+        ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: style.theme,
@@ -195,7 +198,7 @@ class _homeMainState extends State<homeMain> {
                               onTap: (){
                                 Navigator.push(context,
                                 PageRouteBuilder(
-                                    pageBuilder: (c,a1,a2)=>Profile(),
+                                    pageBuilder: (c,a1,a2)=>Profile(data:data,i:i),
                                     transitionsBuilder: (c, a1, a2, child) =>
                                     SlideTransition(position: Tween(
                                       begin: Offset(-1.0,0.0),
@@ -265,24 +268,28 @@ class Upload extends StatelessWidget {
 }
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
-
+  const Profile({super.key,this.data,this.i});
+  final data;
+  final i;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(context.watch<Store1>().name),),
+      appBar: AppBar(title: Text(data[i]['user']),),
       body: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-            CircleAvatar(radius: 30,backgroundColor: Colors.grey,),
+            CircleAvatar(radius: 30,
+              backgroundColor: Colors.grey,
+            ),
             Text('팔로워 ${context.read<Store1>().follow}명'),
             ElevatedButton(onPressed: (){
               context.read<Store1>().addfollow();
-            },
-                child: Text('팔로우')
-            )
+            }, child: Text('팔로우')
+            ),ElevatedButton(onPressed: (){
+                context.read<Store1>().getData();
+              }, child: Text('사진가져오기 '))
           ],
           ),
 
@@ -296,22 +303,35 @@ class Store1 extends ChangeNotifier {
 
   var name = 'john kim';
   var follow = 0;
+  var friend= false;
+  var profileImage = [];
+
+  getData() async{
+    var result = await http.get(Uri.parse('https://codingapple1.github.io/app/profile.json'));
+    var result2 = jsonDecode(result.body);
+    profileImage =result2;
+    notifyListeners();
+  }
+
   addfollow(){
-    if(
-    //버튼을 누르지 않음
+    if(friend==false
     ){
       follow++;
-      //정보 저장.
+      friend=true;
     }
     else//버튼을 이미 눌름 .
       {
         follow--;
+        friend=false;
         //정보 저장 해제
       }
-
+    notifyListeners();
   }
   changeName(){
     name ='john park';
     notifyListeners();
   }
+}
+class Store2 extends ChangeNotifier {
+
 }
