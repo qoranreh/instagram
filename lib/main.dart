@@ -273,20 +273,21 @@ class Profile extends StatelessWidget {
   final i;
   @override
   Widget build(BuildContext context) {
+    print(context.read<Store1>().profileImage.length);
     return Scaffold(
       appBar: AppBar(title: Text(data[i]['user']),),
-      body: Column(
-        children: [
-          Flexible(child: Container(),flex: 4,),
-          Flexible(
-            flex: 5,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),//근데 몇개를 가로로 몇개인지  설정
-              itemBuilder: (c,i){
-                return Container(color: Colors.grey,);
-              },
-              itemCount: 8,//회색박스가 3개만큼 격자로 배ㅣㅊ
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: ProfileHeader(),
+          ),
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+                (c,i) => Container(child: Image.network(context.read<Store1>().profileImage[i]),),
+              childCount: context.read<Store1>().profileImage.length//격자 몇개 만들 것
             ),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+
           )
         ],)
     );
@@ -311,6 +312,7 @@ class ProfileHeader  extends StatelessWidget {
             }, child: Text('팔로우')
             ),ElevatedButton(onPressed: (){
               context.read<Store1>().getData();
+              print(context.read<Store1>().profileImage);
             }, child: Text('사진가져오기 '))
           ],
         ),
@@ -333,6 +335,7 @@ class Store1 extends ChangeNotifier {
     var result2 = jsonDecode(result.body);
     profileImage =result2;
     notifyListeners();
+    print(profileImage);
   }
 
   addfollow(){
