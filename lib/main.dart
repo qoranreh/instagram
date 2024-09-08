@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram/notification.dart';
+import 'notification.dart';
 import 'package:instagram/style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -98,6 +98,9 @@ saveData() async{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(child: Text('+'),onPressed: (){
+        showNotification();
+      },),
       appBar: AppBar(
         title: Text('Instagram'),
         actions: [
