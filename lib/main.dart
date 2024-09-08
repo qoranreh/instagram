@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'notification.dart';
 import 'package:instagram/style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,6 +10,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'notification.dart';
 
 void main() {
   runApp(
@@ -92,13 +92,15 @@ saveData() async{
     super.initState();
     getData();
     saveData();
-    initNotification();
+    initNotification(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(child: Text('+'),onPressed: (){
+      floatingActionButton: FloatingActionButton(
+        child: Text('+'),
+        onPressed: (){
         showNotification();
       },),
       appBar: AppBar(

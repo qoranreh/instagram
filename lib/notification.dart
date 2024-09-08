@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 final notifications = FlutterLocalNotificationsPlugin();
 
-initNotification() async {
+initNotification(context) async {
   var androidSetting = AndroidInitializationSettings('app_icon');
 //안드로이드용 알림 아이콘 파일 이름
   var iosSetting = IOSInitializationSettings(
@@ -16,7 +16,15 @@ initNotification() async {
     iOS: iosSetting
   );
   await notifications.initialize(
-      initializationSettings
+      initializationSettings,
+      onSelectNotification: (payload){//알람 눌렀을때 이 코드 실행.
+        Navigator.push(
+            context,
+        MaterialPageRoute(
+            builder: (context) => Text('새로운페이지 ')
+        )
+        );
+  }
   );
 }
 
@@ -41,5 +49,6 @@ showNotification() async {
       '제목',//알림의 제목과 내용
       '내용',
       NotificationDetails(android: androidDetails,iOS: iosDetails)
-      );
+      ,payload: '부가정보'
+  );
 }
