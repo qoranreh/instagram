@@ -10,8 +10,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'notification.dart';
-
+import 'package:instagram/notification.dart';
 void main() {
   runApp(
       MultiProvider(
@@ -101,7 +100,7 @@ saveData() async{
       floatingActionButton: FloatingActionButton(
         child: Text('+'),
         onPressed: (){
-        showNotification();
+          showNotification();
       },),
       appBar: AppBar(
         title: Text('Instagram'),
