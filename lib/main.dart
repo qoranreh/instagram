@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/notification.dart';
 import 'package:instagram/style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -91,6 +92,7 @@ saveData() async{
     super.initState();
     getData();
     saveData();
+    initNotification();
   }
 
   @override
