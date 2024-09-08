@@ -277,9 +277,31 @@ class Profile extends StatelessWidget {
       appBar: AppBar(title: Text(data[i]['user']),),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
+          Flexible(child: Container(),flex: 4,),
+          Flexible(
+            flex: 5,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),//근데 몇개를 가로로 몇개인지  설정
+              itemBuilder: (c,i){
+                return Container(color: Colors.grey,);
+              },
+              itemCount: 8,//회색박스가 3개만큼 격자로 배ㅣㅊ
+            ),
+          )
+        ],)
+    );
+  }
+}
+class ProfileHeader  extends StatelessWidget {
+  const ProfileHeader ({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
             CircleAvatar(radius: 30,
               backgroundColor: Colors.grey,
             ),
@@ -288,16 +310,16 @@ class Profile extends StatelessWidget {
               context.read<Store1>().addfollow();
             }, child: Text('팔로우')
             ),ElevatedButton(onPressed: (){
-                context.read<Store1>().getData();
-              }, child: Text('사진가져오기 '))
+              context.read<Store1>().getData();
+            }, child: Text('사진가져오기 '))
           ],
-          ),
+        ),
 
-        ],
-      ),
+      ],
     );
   }
 }
+
 
 class Store1 extends ChangeNotifier {
 
