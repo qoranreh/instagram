@@ -14,7 +14,14 @@ import 'package:provider/provider.dart';
 import 'package:instagram/notification.dart';
 import 'package:instagram/notification_servic.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initalizeApp(
+    options: DefaultFire
+  );
   runApp(
       MultiProvider(
         providers: [
