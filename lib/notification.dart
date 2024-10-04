@@ -9,29 +9,18 @@ final notifications = FlutterLocalNotificationsPlugin();
 initNotification(context) async {
   var androidSetting = AndroidInitializationSettings('app_icon');
 //안드로이드용 알림 아이콘 파일 이름
-  var iosSetting = IOSInitializationSettings(
-    requestAlertPermission: true,
-    requestBadgePermission: true,
-    requestSoundPermission: true
-  );
+
 
   if (await Permission.notification.isDenied) {
     await Permission.notification.request();
   }
   var initializationSettings = InitializationSettings(
     android: androidSetting,
-    iOS: iosSetting
+
   );
   await notifications.initialize(
       initializationSettings,
-      onSelectNotification: (payload){//알람 눌렀을때 이 코드 실행.
-        Navigator.push(
-            context,
-        MaterialPageRoute(
-            builder: (context) => Text('새로운페이지 ')
-        )
-        );
-  }
+
   );
 }
 
@@ -46,16 +35,12 @@ showNotification() async {
     color:  Color.fromARGB(255, 255, 0, 0),//알림 아이콘 색상.
 
   );
-  var iosDetails = IOSNotificationDetails(
-    presentAlert: true,//보여줄지
-    presentBadge: true,//배지로 표현할지
-    presentSound: true//소리 할지
-  );
+
   notifications.show(
       1,//개별알림의 ID 숫자
       '제목',//알림의 제목과 내용
       '내용',
-      NotificationDetails(android: androidDetails,iOS: iosDetails)
+      NotificationDetails(android: androidDetails)
       ,payload: '부가정보'
   );
 }
@@ -71,17 +56,13 @@ showNotification2() async{
     importance: Importance.max,
     color: Color.fromARGB(255, 255, 0, 0)
   );
-  var iosDetails  = const IOSNotificationDetails(
-      presentAlert: true,//보여줄지
-      presentBadge: true,//배지로 표현할지
-      presentSound: true//소리 할지
-  );
+
   notifications.zonedSchedule(
       2,//개별알림의 ID 숫자
       '제목',//알림의 제목과 내용
       '내용',
       tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
-      NotificationDetails(android: androidDetails,iOS: iosDetails),
+      NotificationDetails(android: androidDetails),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
       UILocalNotificationDateInterpretation.absoluteTime,

@@ -13,15 +13,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:instagram/notification.dart';
 import 'package:instagram/notification_servic.dart';
-
+import 'package:instagram/page/shop.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initalizeApp(
-    options: DefaultFire
-  );
+  await Firebase.initializeApp();
   runApp(
       MultiProvider(
         providers: [
@@ -35,6 +33,9 @@ void main() {
           ),
       )
   );
+}
+
+class DefaultFirebaseOptions {
 }
 
 
@@ -169,7 +170,7 @@ saveData() async{
           )
         ],
       ),
-      body: [homeMain(data:data,images:images),Text('샵페이지')][tap]
+      body: [homeMain(data:data,images:images), Shop()][tap]
       ,
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
